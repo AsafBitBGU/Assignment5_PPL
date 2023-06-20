@@ -152,21 +152,6 @@
 ;; Purpose: Using an initial approximation `y`, return a 
 ;; sequence of real numbers which converges into the 
 ;; square root of `x`
-; (define sqrt-with
-;   (lambda (x y)
-;     (define next-approx
-;       (lambda (approx)
-;         (cons-lzl approx (lambda () (next-approx (// (++ approx (// x approx)) 2))))))
-;     (next-approx y)
-;   )
-; )
-
-; (define sqrt-with
-;   (lambda (x y)
-;     (define next-approx
-;       (lambda (yn)
-;         (cons-lzl yn (lambda () (next-approx (/ (++ yn (// x yn)) 2))))))
-;     (cons-lzl y (lambda () (next-approx y)))))
 (define sqrt-with
   (lambda (x y)
     (define next-approx
@@ -176,18 +161,17 @@
 
 
 
+
+
 ;;; Q2.2.b
 ;; Signature: diag(lzl)
 ;; Type: [ Lzl(Lzl(T)) -> Lzl(T) ]
 ;; Purpose: Diagonalize an infinite lazy list
 (define diag
   (lambda (lzl)
-    (define next-diag
-      (lambda (lzls n)
-        (cons-lzl (nth (head lzls) n) (lambda () (next-diag (tail lzls) (+ n 1))))))
-    (next-diag lzl 0)
-  )
-)
+    (cons-lzl (head (head lzl))
+              (lambda ()
+                (diag (map-lzl tail (tail lzl)))))))
 
 
 ;;; Q2.2.c
@@ -197,10 +181,15 @@
 ;; Example: (take (rsqrt (as-real 4.0)) 6) => '(4.0 2.5 2.05 2.0006097560975613 2.0000000929222947 2.000000000000002)
 (define rsqrt
   (lambda (x)
-    (define approximations (sqrt-with x x))
-    (diag approximations)
-  )
-)
+    (letrec ((approximations (sqrt-with x x))
+             (result (diag (cons-lzl approximations (lambda () result)))))
+      (map-lzl head result))))
+
+
+
+
+
+
 
 
 

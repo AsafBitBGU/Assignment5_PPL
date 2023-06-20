@@ -10,6 +10,7 @@
 (check-equal? (append$ '() '() id)  '() "incorrect append$ 3")
 
 ;; Q1b
+
 (check-equal? (equal-trees$ '(1 (2) (3 9)) '(7 (2) (3 5)) id id) '((1 . 7) ((2 . 2)) ((3 . 3) (9 . 5))) "incorrect equal-trees$ 1")
 (check-equal? (equal-trees$ '(1 (2) (3 9)) '(1 (2) (3 9)) id id) '((1 . 1) ((2 . 2)) ((3 . 3) (9 . 9))) "incorrect equal-trees$ 2")
 (check-equal? (equal-trees$ '(1 2 (3 9)) '(1 (2) (3 9)) id id) '(2 2) "incorrect equal-trees$ 3")
